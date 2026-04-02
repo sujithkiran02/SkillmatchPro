@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SkillMatchPro — AI Resume Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="toast-container" id="toast-container"></div>
+
+<nav>
+  <div class="logo" onclick="App.goHome()">
+    <div class="logo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+    <span class="logo-name">SkillMatch<span>Pro</span></span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-link" onclick="App.goHome()">Home</span>
+    <span class="nav-link" onclick="App.goHome();setTimeout(()=>document.getElementById('sec-how')?.scrollIntoView({behavior:'smooth'}),60)">How it Works</span>
+    <span class="nav-link nav-link-highlight" onclick="App.startBuilder()">✦ Resume Builder</span>
+    <span class="nav-link nav-link-coverletter" onclick="App.showPage('coverletter')">✦ Cover Letter</span>
+    <div id="nav-guest" style="display:flex;align-items:center;gap:10px">
+      <button class="btn-nav-ghost" onclick="App.showPage('login')">Log In</button>
+      <button class="btn-nav" onclick="App.showPage('signup')">Sign Up Free</button>
+    </div>
+    <div id="nav-user">
+      <div class="user-dot" id="nav-avatar">U</div>
+      <span id="nav-username">User</span>
+      <button class="btn-nav-ghost" onclick="Auth.logout()">Logout</button>
+    </div>
+    <button class="theme-toggle" onclick="App.toggleTheme()" title="Toggle dark mode">
+      <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- LOGIN -->
+<div id="page-login" class="page">
+  <div class="auth-page">
+    <div class="auth-glow g1"></div><div class="auth-glow g2"></div>
+    <div class="auth-card">
+      <div class="auth-logo"><div class="auth-logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><span class="auth-logo-name">SkillMatch<span>Pro</span></span></div>
+      <h2 class="auth-title">Welcome Back</h2><p class="auth-sub">Sign in to continue your career journey</p>
+      <div class="auth-error" id="login-error"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span id="login-error-msg">Invalid credentials</span></div>
+      <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="login-email" placeholder="you@example.com"/></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="login-password" placeholder="Enter your password" onkeydown="if(event.key==='Enter')Auth.login()"/></div>
+      <button class="btn-submit" onclick="Auth.login()" id="login-btn">Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      <div class="auth-switch">Don't have an account? <a onclick="App.showPage('signup')">Create one free</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP -->
+<div id="page-signup" class="page">
+  <div class="auth-page">
+    <div class="auth-glow g1"></div><div class="auth-glow g2"></div>
+    <div class="auth-card">
+      <div class="auth-logo"><div class="auth-logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><span class="auth-logo-name">SkillMatch<span>Pro</span></span></div>
+      <h2 class="auth-title">Create Account</h2><p class="auth-sub">Start analyzing resumes with AI today</p>
+      <div class="auth-error" id="signup-error"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span id="signup-error-msg">An error occurred</span></div>
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" type="text" id="signup-name" placeholder="Your name"/></div>
+      <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="signup-email" placeholder="you@example.com"/></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="signup-password" placeholder="Min 6 characters" onkeydown="if(event.key==='Enter')Auth.signup()"/></div>
+      <button class="btn-submit" onclick="Auth.signup()" id="signup-btn">Create Account <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      <div class="auth-switch">Already have an account? <a onclick="App.showPage('login')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-orb o1"></div><div class="hero-orb o2"></div>
+    <div class="hero-badge"><span class="badge-dot"></span>AI-Powered Resume Intelligence</div>
+    <h1>Discover Your<br><span class="teal">Skill Gaps</span><br><span class="outline">Instantly</span></h1>
+    <p>Analyze your resume against top roles, build stunning resumes from professional templates, and get AI-powered career guidance.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="App.startAnalyze()">Analyze My Resume <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      <button class="btn-primary" style="background:var(--navy4);box-shadow:none;border:1.5px solid rgba(255,255,255,.15)" onclick="App.startBuilder()">Build My Resume <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
+      <button class="btn-outline-hero" onclick="document.getElementById('sec-how').scrollIntoView({behavior:'smooth'})">Learn More</button>
+    </div>
+    <div class="scroll-hint"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+  </section>
+
+  <div class="stats-band">
+    <div class="stats-card">
+      <div class="stat-col reveal reveal-delay-1"><div class="stat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="stat-num">50K+</div><div class="stat-label">Resumes Analyzed</div></div>
+      <div class="stat-col reveal reveal-delay-2"><div class="stat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="stat-num">12</div><div class="stat-label">Resume Templates</div></div>
+      <div class="stat-col reveal reveal-delay-3"><div class="stat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div><div class="stat-num">200+</div><div class="stat-label">Course Suggestions</div></div>
+      <div class="stat-col reveal" style="transition-delay:.4s"><div class="stat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div><div class="stat-num">85%</div><div class="stat-label">Career Growth</div></div>
+    </div>
+  </div>
+
+  <section class="section section-center" id="sec-how">
+    <div class="section-badge-wrap"><div class="section-badge">Simple Process</div></div>
+    <h2 class="section-title">How It <span class="teal">Works</span></h2>
+    <p class="section-sub">Four simple steps to understand your skill landscape and land your dream role.</p>
+    <div class="how-grid how-grid-4">
+      <div class="how-card reveal reveal-delay-1"><div class="how-card-step">Step 01</div><div class="how-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div><h3>Upload Resume</h3><p>Drop your PDF and our AI extracts text and identifies skills instantly.</p></div>
+      <div class="how-card reveal reveal-delay-2"><div class="how-card-step">Step 02</div><div class="how-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div><h3>Select Target Role</h3><p>Choose from 8 career paths and see how well your resume matches.</p></div>
+      <div class="how-card reveal reveal-delay-3"><div class="how-card-step">Step 03</div><div class="how-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><h3>Get AI Insights</h3><p>See match scores, skill gaps, and personalized course recommendations.</p></div>
+      <div class="how-card reveal" style="transition-delay:.4s"><div class="how-card-step">Step 04</div><div class="how-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><h3>Build &amp; Download</h3><p>Create a stunning resume from 12 top-rated templates and download as PDF.</p></div>
+    </div>
+  </section>
+
+  <div class="cta-wrap">
+    <div class="cta-box">
+      <div class="cta-teal-ring"></div>
+      <div class="cta-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+      <h2>Ready to Land Your Dream Job?</h2>
+      <p>Analyze your skill gaps, build a professional resume, and get AI-powered career guidance — all in one place.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1">
+        <button class="btn-primary" onclick="App.startAnalyze()">Analyze Resume <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+        <button class="btn-primary" style="background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);box-shadow:none" onclick="App.startBuilder()">Build Resume <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="logo"><div class="logo-icon" style="box-shadow:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><span class="logo-name" style="color:#fff">SkillMatch<span>Pro</span></span></div>
+    <p>© 2026 SkillMatchPro. AI-powered career intelligence.</p>
+  </footer>
+</div>
+
+<!-- ANALYZE PAGE -->
+<div id="page-analyze" class="page">
+  <div class="analyze-hero">
+    <h2>Analyze Your <span class="teal">Resume</span></h2>
+    <p>Real AI-powered analysis based on your actual resume content</p>
+    <div class="stepper">
+      <div class="step" id="si-1"><div class="step-circle">1</div><span>Upload</span></div>
+      <div class="step-line" id="sl-1"></div>
+      <div class="step" id="si-2"><div class="step-circle">2</div><span>Select Role</span></div>
+      <div class="step-line" id="sl-2"></div>
+      <div class="step" id="si-3"><div class="step-circle">3</div><span>Results</span></div>
+    </div>
+  </div>
+  <div class="analyze-body">
+    <div id="card-upload" class="a-card">
+      <input type="file" id="fileInput" accept=".pdf" onchange="Analyzer.onFileSelected(this)">
+      <div id="drop-zone" class="drop-zone" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="event.preventDefault();this.classList.remove('over');Analyzer.onFileDrop(event)">
+        <div class="upload-icon-outer"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg><div class="upload-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <h3>Drop your resume here</h3><p>Click to browse &bull; PDF files up to 10MB</p>
+      </div>
+      <div id="file-uploaded" style="display:none">
+        <div class="file-row">
+          <div class="file-icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="file-details"><div class="file-name" id="fname-display">resume.pdf</div><div class="file-status" id="file-status-text"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Ready to process</div></div>
+          <button class="file-remove" onclick="Analyzer.removeFile()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="parse-progress" id="parse-progress"><div class="parse-label"><span id="parse-label-text">Extracting text…</span><span id="parse-pct-text">0%</span></div><div class="parse-bar-outer"><div class="parse-bar-inner" id="parse-bar"></div></div></div>
+        <div class="extracted-preview" id="extracted-preview"><div class="ep-title">✦ Skills Detected in Your Resume</div><div class="ep-tags" id="ep-tags-container"></div></div>
+        <div class="continue-row"><button class="btn-continue" id="btn-continue-step2" onclick="Analyzer.goStep(2)" disabled>Continue <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
+      </div>
+    </div>
+    <div id="card-role" class="a-card" style="display:none">
+      <div class="file-summary-bar"><div class="file-summary-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="file-summary-name" id="fname-step2">resume.pdf</div><div class="file-summary-sub" id="skills-detected-count">Analyzing…</div></div></div>
+      <div class="role-section-title">Select Target Job Role</div>
+      <div class="role-section-sub">Choose the career path you want to evaluate your resume against</div>
+      <div class="roles-grid">
+        <div class="role-card" onclick="Analyzer.pickRole(this,'Web Developer')"><div class="role-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="role-emoji">🌐</span><div class="role-name">Web Developer</div><div class="role-count">13 skills</div></div>
+        <div class="role-card" onclick="Analyzer.pickRole(this,'Data Scientist')"><div class="role-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="role-emoji">📊</span><div class="role-name">Data Scientist</div><div class="role-count">12 skills</div></div>
+        <div class="role-card" onclick="Analyzer.pickRole(this,'Mobile Developer')"><div class="role-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="role-emoji">📱</span><div class="role-name">Mobile Developer</div><div class="role-count">12 skills</div></div>
+        <div class="role-card" onclick="Analyzer.pickRole(this,'DevOps Engineer')"><div class="role-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="role-emoji">⚙️</span><div class="role-name">DevOps Engineer</div><div class="role-count">12 skills</div></div>
+        <div class="role-card" onclick="Analyzer.pickRole(this,'UI/UX Designer')"><div class="role-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="role-emoji">🎨</span><div class="role-name">UI/UX Designer</div><div class="role-count">11 skills</div></div>
+        <div class="role-card" onclick="Analyzer.pickRole(this,'Backend Developer')"><div class="role-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="role-emoji">🖥️</span><div class="role-name">Backend Developer</div><div class="role-count">12 skills</div></div>
+        <div class="role-card" onclick="Analyzer.pickRole(this,'Cybersecurity Analyst')"><div class="role-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="role-emoji">🔒</span><div class="role-name">Cybersecurity Analyst</div><div class="role-count">12 skills</div></div>
+        <div class="role-card" onclick="Analyzer.pickRole(this,'AI/ML Engineer')"><div class="role-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="role-emoji">🤖</span><div class="role-name">AI/ML Engineer</div><div class="role-count">10 skills</div></div>
+      </div>
+      <button class="btn-analyze" id="btn-analyze" onclick="Analyzer.runAnalysis()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Analyze with AI</button>
+    </div>
+    <div id="card-loading" class="a-card loading-card" style="display:none">
+      <div class="spinner-ring" style="margin-bottom:28px"></div>
+      <div class="loading-title">Analyzing Your Resume</div>
+      <div class="loading-sub">Sit tight while our AI engine processes your resume…</div>
+      <div class="analysis-steps">
+        <div class="analysis-step-item" id="lstep-1"><div class="step-dot"></div> Extracting resume content</div>
+        <div class="analysis-step-item" id="lstep-2"><div class="step-dot"></div> Identifying skills with AI</div>
+        <div class="analysis-step-item" id="lstep-3"><div class="step-dot"></div> Comparing against role requirements</div>
+        <div class="analysis-step-item" id="lstep-4"><div class="step-dot"></div> Generating personalized insights</div>
+      </div>
+    </div>
+    <div id="card-results" class="a-card" style="display:none">
+      <div class="results-header"><h2 id="res-title">Skill Gap Analysis</h2><p id="res-sub">Results based on your actual resume</p></div>
+      <div class="ai-insight-banner"><div class="ai-icon">✦</div><div class="ai-insight-text" id="ai-insight-text"><div class="ai-thinking">AI is generating your personalized insights…</div></div></div>
+      <div class="results-top">
+        <div class="score-ring-card"><div class="ring-wrap"><svg width="110" height="110" viewBox="0 0 110 110"><circle id="ring-track" cx="55" cy="55" r="50" fill="none" stroke-width="9"/><circle id="ring-fill" cx="55" cy="55" r="50" fill="none" stroke-width="9"/></svg><div class="ring-center"><span id="res-pct">0%</span><span id="res-label" style="font-size:9px;letter-spacing:.06em;font-weight:700;text-transform:uppercase;">—</span></div></div><div class="score-subtitle">Match Score</div></div>
+        <div class="skills-card"><div class="sk-header"><div class="sk-dot green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="sk-title">Matching Skills</div></div><div class="sk-count" id="res-match-count">0</div><div class="tags" id="res-match-tags"></div></div>
+        <div class="skills-card"><div class="sk-header"><div class="sk-dot red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div><div class="sk-title">Missing Skills</div></div><div class="sk-count" id="res-miss-count">0</div><div class="tags" id="res-miss-tags"></div></div>
+      </div>
+      <div class="courses-header"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><h3>Suggested Courses</h3></div>
+      <div class="courses-grid" id="res-courses"></div>
+      <div class="pro-tip"><div class="tip-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div><div class="tip-title">Pro Tip</div><div class="tip-text" id="res-tip">Loading tip…</div></div></div>
+      <div class="analyze-another-row"><button class="btn-analyze-another" onclick="Analyzer.resetAll()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Analyze Another Resume</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================ RESUME BUILDER ================================================================ -->
+<div id="page-builder" class="page">
+  <div class="builder-layout">
+
+    <!-- LEFT: Editor Panel -->
+    <aside class="builder-editor" id="builder-editor">
+      <div class="editor-header">
+        <div class="editor-header-left">
+          <button class="editor-back-btn" onclick="App.goHome()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
+          <div>
+            <div class="editor-title">Resume Builder</div>
+            <div class="editor-subtitle" id="current-template-name">Select a template</div>
+          </div>
+        </div>
+        <button class="btn-editor-download" onclick="ResumeBuilder.downloadPDF()" id="btn-download-pdf">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </button>
+      </div>
+
+      <!-- Template Picker -->
+      <div class="editor-section">
+        <div class="editor-section-label">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Choose Template
+        </div>
+        <div class="template-picker" id="template-picker"></div>
+      </div>
+
+      <!-- Color Accent -->
+      <div class="editor-section">
+        <div class="editor-section-label">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125 0-.976.8-1.688 1.75-1.688H16c2.21 0 4-1.79 4-4 0-4.42-3.8-8-8-8z"/></svg>
+          Accent Color
+        </div>
+        <div class="color-swatches" id="color-swatches"></div>
+      </div>
+
+      <!-- Form Sections -->
+      <div class="editor-form" id="editor-form">
+
+        <div class="form-section open" id="fs-personal">
+          <div class="form-section-header" onclick="ResumeBuilder.toggleSection('personal')">
+            <div class="form-section-title"><span class="fs-icon">👤</span> Personal Info</div>
+            <svg class="fs-chevron open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="form-section-body" id="fsb-personal">
+            <div class="form-row-2">
+              <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="r-name" placeholder="John Doe" oninput="ResumeBuilder.update()"/></div>
+              <div class="form-group"><label class="form-label">Job Title</label><input class="form-input" id="r-title" placeholder="Software Engineer" oninput="ResumeBuilder.update()"/></div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="r-email" placeholder="john@email.com" oninput="ResumeBuilder.update()"/></div>
+              <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="r-phone" placeholder="+1 555 000-0000" oninput="ResumeBuilder.update()"/></div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="r-location" placeholder="San Francisco, CA" oninput="ResumeBuilder.update()"/></div>
+              <div class="form-group"><label class="form-label">LinkedIn</label><input class="form-input" id="r-linkedin" placeholder="linkedin.com/in/you" oninput="ResumeBuilder.update()"/></div>
+            </div>
+            <div class="form-group"><label class="form-label">GitHub / Portfolio</label><input class="form-input" id="r-website" placeholder="github.com/you" oninput="ResumeBuilder.update()"/></div>
+          </div>
+        </div>
+
+        <div class="form-section" id="fs-summary">
+          <div class="form-section-header" onclick="ResumeBuilder.toggleSection('summary')">
+            <div class="form-section-title"><span class="fs-icon">📝</span> Professional Summary</div>
+            <svg class="fs-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="form-section-body" id="fsb-summary" style="display:none">
+            <div class="form-group"><label class="form-label">Summary</label><textarea class="form-input form-textarea" id="r-summary" placeholder="Results-driven engineer with 5+ years building scalable applications…" oninput="ResumeBuilder.update()" rows="4"></textarea></div>
+          </div>
+        </div>
+
+        <div class="form-section" id="fs-experience">
+          <div class="form-section-header" onclick="ResumeBuilder.toggleSection('experience')">
+            <div class="form-section-title"><span class="fs-icon">💼</span> Work Experience</div>
+            <svg class="fs-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="form-section-body" id="fsb-experience" style="display:none">
+            <div id="experience-list"></div>
+            <button class="btn-add-item" onclick="ResumeBuilder.addExperience()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Experience</button>
+          </div>
+        </div>
+
+        <div class="form-section" id="fs-education">
+          <div class="form-section-header" onclick="ResumeBuilder.toggleSection('education')">
+            <div class="form-section-title"><span class="fs-icon">🎓</span> Education</div>
+            <svg class="fs-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="form-section-body" id="fsb-education" style="display:none">
+            <div id="education-list"></div>
+            <button class="btn-add-item" onclick="ResumeBuilder.addEducation()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Education</button>
+          </div>
+        </div>
+
+        <div class="form-section" id="fs-skills">
+          <div class="form-section-header" onclick="ResumeBuilder.toggleSection('skills')">
+            <div class="form-section-title"><span class="fs-icon">⚡</span> Skills</div>
+            <svg class="fs-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="form-section-body" id="fsb-skills" style="display:none">
+            <div class="form-group"><label class="form-label">Skills <span style="font-weight:400;color:var(--muted)">(comma separated)</span></label><textarea class="form-input form-textarea" id="r-skills" placeholder="JavaScript, React, Node.js, Python, SQL, Git…" oninput="ResumeBuilder.update()" rows="3"></textarea></div>
+          </div>
+        </div>
+
+        <div class="form-section" id="fs-projects">
+          <div class="form-section-header" onclick="ResumeBuilder.toggleSection('projects')">
+            <div class="form-section-title"><span class="fs-icon">🚀</span> Projects</div>
+            <svg class="fs-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="form-section-body" id="fsb-projects" style="display:none">
+            <div id="projects-list"></div>
+            <button class="btn-add-item" onclick="ResumeBuilder.addProject()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Project</button>
+          </div>
+        </div>
+
+        <div class="form-section" id="fs-certs">
+          <div class="form-section-header" onclick="ResumeBuilder.toggleSection('certs')">
+            <div class="form-section-title"><span class="fs-icon">🏆</span> Certifications</div>
+            <svg class="fs-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="form-section-body" id="fsb-certs" style="display:none">
+            <div id="certs-list"></div>
+            <button class="btn-add-item" onclick="ResumeBuilder.addCert()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Certification</button>
+          </div>
+        </div>
+
+        <div class="form-section" id="fs-languages">
+          <div class="form-section-header" onclick="ResumeBuilder.toggleSection('languages')">
+            <div class="form-section-title"><span class="fs-icon">🌍</span> Languages</div>
+            <svg class="fs-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="form-section-body" id="fsb-languages" style="display:none">
+            <div class="form-group"><label class="form-label">Languages <span style="font-weight:400;color:var(--muted)">(comma separated)</span></label><input class="form-input" id="r-languages" placeholder="English (Native), Spanish (Fluent)" oninput="ResumeBuilder.update()"/></div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- RIGHT: Live Preview -->
+    <div class="builder-preview-panel">
+      <div class="preview-toolbar">
+        <div class="preview-toolbar-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Live Preview
+        </div>
+        <div class="preview-toolbar-right">
+          <button class="btn-preview-action" onclick="ResumeBuilder.zoomOut()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+          <span class="zoom-label" id="zoom-label">85%</span>
+          <button class="btn-preview-action" onclick="ResumeBuilder.zoomIn()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        </div>
+      </div>
+      <div class="preview-scroll-area">
+        <div class="preview-page-wrap" id="preview-page-wrap">
+          <div class="resume-preview" id="resume-preview">
+            <div class="preview-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--border);margin-bottom:16px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <div style="font-size:15px;font-weight:600;color:var(--muted);margin-bottom:6px">Select a template to get started</div>
+              <div style="font-size:13px;color:var(--border)">Your resume will appear here</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- COVER LETTER PAGE -->
+<div id="page-coverletter" class="page">
+
+  <!-- Hero -->
+  <div class="cl-hero">
+    <div class="cl-hero-orb o1"></div>
+    <div class="cl-hero-orb o2"></div>
+    <div class="cl-hero-badge"><span class="cl-hero-badge-dot"></span>AI-Powered Writing</div>
+    <h1>Generate Your<br><span>Cover Letter</span><br>in Seconds</h1>
+    <p>Paste any job description, choose your tone, and get a fully tailored, ready-to-send cover letter instantly.</p>
+  </div>
+
+  <!-- Workspace -->
+  <div class="cl-workspace">
+
+    <!-- LEFT: Input panel -->
+    <div class="cl-panel">
+      <div class="cl-panel-header">
+        <div class="cl-panel-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <span class="cl-panel-title">Your Details &amp; Job Description</span>
+      </div>
+      <div class="cl-panel-body">
+        <span class="cl-tone-label">Tone</span>
+        <div class="cl-tone-grid" id="cl-tone-grid">
+          <button class="cl-tone-btn active" data-tone="Professional" onclick="CoverLetter.selectTone(this)">💼 Professional</button>
+          <button class="cl-tone-btn" data-tone="Enthusiastic" onclick="CoverLetter.selectTone(this)">🔥 Enthusiastic</button>
+          <button class="cl-tone-btn" data-tone="Concise" onclick="CoverLetter.selectTone(this)">⚡ Concise</button>
+          <button class="cl-tone-btn" data-tone="Creative" onclick="CoverLetter.selectTone(this)">🎨 Creative</button>
+          <button class="cl-tone-btn" data-tone="Formal" onclick="CoverLetter.selectTone(this)">🎓 Formal</button>
+        </div>
+        <div class="cl-fields-row">
+          <div class="form-group">
+            <label class="form-label">Your Full Name</label>
+            <input class="cl-skills-input" id="cl-name" type="text" placeholder="Jane Smith" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Company Name</label>
+            <input class="cl-skills-input" id="cl-company" type="text" placeholder="Acme Corp" />
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label">Your Key Skills <span style="font-weight:400;color:var(--muted);font-size:12px">(optional — comma separated)</span></label>
+          <input class="cl-skills-input" id="cl-skills" type="text" placeholder="React, Node.js, Python, SQL…" />
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="cl-jd-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Job Description
+            <span>Paste the full JD for best results</span>
+          </label>
+          <textarea class="cl-jd-textarea" id="cl-jd" placeholder="Paste the job description here…&#10;&#10;We are looking for a Senior Software Engineer to join our growing team…"></textarea>
+        </div>
+        <button class="cl-generate-btn" id="cl-generate-btn" onclick="CoverLetter.generate()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Generate Cover Letter
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Output panel -->
+    <div class="cl-panel" style="display:flex;flex-direction:column">
+      <div class="cl-panel-header">
+        <div class="cl-panel-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <span class="cl-panel-title">Generated Cover Letter</span>
+      </div>
+      <div class="cl-shimmer-lines" id="cl-shimmer">
+        <div class="cl-shimmer-line" style="width:60%"></div>
+        <div class="cl-shimmer-line" style="width:100%"></div>
+        <div class="cl-shimmer-line" style="width:92%"></div>
+        <div class="cl-shimmer-line" style="width:100%"></div>
+        <div class="cl-shimmer-line" style="width:85%"></div>
+        <div class="cl-shimmer-line" style="width:100%"></div>
+        <div class="cl-shimmer-line" style="width:78%"></div>
+        <div class="cl-shimmer-line" style="width:100%"></div>
+        <div class="cl-shimmer-line" style="width:95%"></div>
+        <div class="cl-shimmer-line" style="width:55%"></div>
+      </div>
+      <div class="cl-fallback-notice" id="cl-fallback-notice">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        AI unavailable — generated using smart client-side template
+      </div>
+      <div class="cl-output-empty" id="cl-output-empty">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <div class="cl-output-empty-title">Your cover letter will appear here</div>
+        <div class="cl-output-empty-sub">Fill in the fields and click Generate</div>
+      </div>
+      <div class="cl-output-content" id="cl-output-content" style="flex:1">
+        <div class="cl-output-meta">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <div class="cl-word-count">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
+              <span class="cl-word-count-num" id="cl-word-count">0</span> words
+            </div>
+            <div class="cl-tone-badge" id="cl-tone-badge">Professional</div>
+          </div>
+          <div class="cl-output-actions">
+            <button class="cl-action-btn" onclick="CoverLetter.regenerate()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Regenerate
+            </button>
+            <button class="cl-action-btn" onclick="CoverLetter.downloadTxt()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              .txt
+            </button>
+            <button class="cl-action-btn primary" onclick="CoverLetter.copyToClipboard()" id="cl-copy-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </div>
+        <div class="cl-output-text" id="cl-output-text"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script src="auth-backend.js"></script>
+</body>
+</html>
