@@ -24,7 +24,6 @@
   --amber-bg:   #FEF3C7;
   --font-display: 'Syne', sans-serif;
   --font-body:    'DM Sans', sans-serif;
-  --font-metric:  'Orbitron', sans-serif;
   --radius-sm:  8px;
   --radius:     14px;
   --radius-lg:  20px;
@@ -32,7 +31,17 @@
   --shadow-sm:  0 2px 12px rgba(0,0,0,.06);
   --shadow:     0 6px 32px rgba(0,0,0,.1);
   --shadow-lg:  0 16px 56px rgba(0,0,0,.14);
-  --transition: .22s cubic-bezier(.4,0,.2,1);
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --focus-ring: 0 0 0 3px rgba(45,212,191,.28);
+  --motion-fast: .16s cubic-bezier(.4,0,.2,1);
+  --motion-base: .24s cubic-bezier(.4,0,.2,1);
+  --motion-slow: .38s cubic-bezier(.4,0,.2,1);
+  --transition: var(--motion-base);
 }
 
 /* Dark mode */
@@ -40,7 +49,7 @@
   --bg:      #080E1A;
   --surface: #0F1A2E;
   --border:  #1C2D47;
-  --muted:   #8898AA;
+  --muted:   #A7B4C8;
   --text:    #E8F0FC;
   --shadow-sm: 0 2px 12px rgba(0,0,0,.3);
   --shadow:    0 6px 32px rgba(0,0,0,.4);
@@ -58,8 +67,31 @@ body {
   overflow-x: hidden;
   transition: background var(--transition), color var(--transition);
 }
+.skip-link {
+  position: fixed;
+  left: var(--space-md);
+  top: -48px;
+  z-index: 1200;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: var(--shadow-sm);
+  transition: top var(--motion-fast);
+}
+.skip-link:focus-visible { top: var(--space-md); }
 a { text-decoration: none; color: inherit; }
 button { font-family: var(--font-body); }
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
 
 /* ============================================================
    PAGE SYSTEM
@@ -200,7 +232,17 @@ nav {
   outline: none; transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
 }
 .form-input::placeholder { color: var(--muted); }
-.form-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,212,191,.15); background: var(--surface); }
+.form-input:focus { border-color: var(--teal); box-shadow: var(--focus-ring); background: var(--surface); }
+.form-input.is-invalid { border-color: var(--red); }
+.field-error {
+  min-height: 16px;
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--red);
+  opacity: 0;
+  transition: opacity var(--motion-fast);
+}
+.field-error.show { opacity: 1; }
 
 .btn-submit {
   width: 100%; padding: 14px;
@@ -328,12 +370,9 @@ nav {
 .stat-col:last-child { border-right: none; }
 .stat-icon { color: var(--teal); margin-bottom: 14px; }
 .stat-num {
-  font-family: var(--font-metric);
+  font-family: var(--font-display);
   font-size: 36px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: .04em;
-  font-variant-numeric: lining-nums tabular-nums;
+  font-weight: 800;
   color: var(--text);
   margin-bottom: 4px;
 }
@@ -750,6 +789,45 @@ input[type=file] { display: none; }
   transition: all var(--transition);
 }
 .btn-analyze-another:hover { border-color: var(--muted); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+.results-sticky-actions {
+  position: sticky;
+  bottom: 12px;
+  z-index: 25;
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 10px;
+  padding: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  backdrop-filter: blur(10px);
+}
+.btn-result-action {
+  background: var(--surface);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  min-height: 40px;
+  padding: 8px 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--motion-fast);
+}
+.btn-result-action:hover { border-color: var(--muted); transform: translateY(-1px); }
+.btn-result-action-primary {
+  background: var(--teal);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 3px 12px rgba(45,212,191,.35);
+}
+.btn-result-action-primary:hover { background: var(--teal-dark); border-color: transparent; }
 
 /* ============================================================
    SCROLL REVEAL
@@ -869,6 +947,35 @@ input[type=file] { display: none; }
   .tip-icon { width: 32px; height: 32px; border-radius: 9px; }
   .tip-title { font-size: 13px; }
   .tip-text { font-size: 12px; line-height: 1.55; }
+  .results-sticky-actions { grid-template-columns: 1fr; bottom: 8px; }
+  .btn-result-action { width: 100%; }
+}
+
+@media(max-width: 390px) {
+  nav { padding: 0 12px; }
+  .logo-name { font-size: 15px; }
+  .hero { padding-top: 102px; }
+  .hero-title { line-height: 1.12; }
+  .hero-btns .btn-primary, .hero-btns .btn-outline-hero { width: 100%; }
+  .a-card { padding: 16px 12px; }
+  .results-header h2 { font-size: 18px; }
+  .course-card { padding: 12px; }
+}
+
+@media(max-width: 360px) {
+  .logo-name { display: none; }
+  .stat-num { font-size: 30px; }
+  .sk-count { font-size: 24px; }
+  .btn-result-action { font-size: 12.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
 }
 
 /* ============================================================
@@ -916,6 +1023,9 @@ input[type=file] { display: none; }
 .editor-back-btn:hover { border-color: var(--muted); color: var(--text); }
 .editor-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--text); }
 .editor-subtitle { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+.editor-autosave { font-size: 11px; color: var(--muted); margin-top: 4px; transition: color var(--motion-fast); }
+.editor-autosave.saving { color: var(--amber); }
+.editor-autosave.saved { color: var(--green); }
 .btn-editor-download {
   background: var(--teal); color: #fff;
   border: none; border-radius: 9px;

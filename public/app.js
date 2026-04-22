@@ -810,6 +810,51 @@ const Analyzer = (() => {
     }
   }
 
+  function exportResults() {
+    const title = document.getElementById('res-title')?.textContent?.trim() || 'Skill Gap Analysis';
+    const score = document.getElementById('res-pct')?.textContent?.trim() || '0%';
+    const label = document.getElementById('res-label')?.textContent?.trim() || '';
+    const matching = Array.from(document.querySelectorAll('#res-match-tags .tag')).map(t => t.textContent.trim()).filter(Boolean);
+    const missing = Array.from(document.querySelectorAll('#res-miss-tags .tag')).map(t => t.textContent.trim()).filter(Boolean);
+    const courses = Array.from(document.querySelectorAll('#res-courses .course-card')).map(card => {
+      const name = card.querySelector('.course-name')?.textContent?.trim() || 'Course';
+      const url = card.getAttribute('href') || '';
+      return `- ${name}${url ? ` — ${url}` : ''}`;
+    });
+    const tip = document.getElementById('res-tip')?.textContent?.trim() || '';
+
+    const content = [
+      title,
+      `Score: ${score}${label ? ` (${label})` : ''}`,
+      '',
+      `Matching Skills (${matching.length}):`,
+      matching.length ? matching.map(s => `- ${s}`).join('\n') : '- None',
+      '',
+      `Missing Skills (${missing.length}):`,
+      missing.length ? missing.map(s => `- ${s}`).join('\n') : '- None',
+      '',
+      'Suggested Courses:',
+      courses.length ? courses.join('\n') : '- None',
+      '',
+      `Pro Tip: ${tip}`
+    ].join('\n');
+
+    navigator.clipboard.writeText(content)
+      .then(() => UI.toast('Results copied. Ready to share/export.', 'success'))
+      .catch(() => {
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'skill-gap-analysis.txt';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        UI.toast('Results exported as text file.', 'success');
+      });
+  }
+
   /* ---------- Reset ---------- */
   function resetAll() {
     state = { uploadedFile: null, uploadedFileName: null, resumeText: '', extractedSkills: [], chosenRole: null, parsedSuccessfully: false };
@@ -827,13 +872,30 @@ const Analyzer = (() => {
     setStep(1);
   }
 
-  return { onFileSelected, onFileDrop, removeFile, goStep, pickRole, runAnalysis, resetAll };
+  return { onFileSelected, onFileDrop, removeFile, goStep, pickRole, runAnalysis, resetAll, exportResults };
 })();
 
 /* ============================================================
    APP MODULE — page routing, theme
 ============================================================ */
 const App = (() => {
+  function enhanceKeyboardAccess() {
+    document.querySelectorAll('[onclick]').forEach(el => {
+      const tag = el.tagName.toLowerCase();
+      if (['button', 'a', 'input', 'textarea', 'select', 'summary'].includes(tag)) return;
+      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+      if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+      if (el.dataset.kbReady === '1') return;
+      el.dataset.kbReady = '1';
+      el.addEventListener('keydown', evt => {
+        if (evt.key === 'Enter' || evt.key === ' ') {
+          evt.preventDefault();
+          el.click();
+        }
+      });
+    });
+  }
+
   function syncMobileNavButton() {
     const nav = document.querySelector('nav');
     const menuBtn = document.getElementById('nav-menu-btn');
@@ -933,6 +995,8 @@ const App = (() => {
       if (e.key === 'Escape') closeMobileNav();
     });
 
+    enhanceKeyboardAccess();
+
     // Scroll reveal
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => {
@@ -942,7 +1006,7 @@ const App = (() => {
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
   }
 
-  return { showPage, startAnalyze, goHome, toggleTheme, toggleMobileNav, closeMobileNav, init };
+  return { showPage, startAnalyze, goHome, toggleTheme, toggleMobileNav, closeMobileNav, enhanceKeyboardAccess, init };
 })();
 
 /* ============================================================
@@ -954,6 +1018,8 @@ document.addEventListener('DOMContentLoaded', App.init);
    RESUME BUILDER MODULE
 ============================================================ */
 const ResumeBuilder = (() => {
+  const DRAFT_KEY = 'smp_resume_draft_v1';
+  const SAVE_DELAY = 350;
 
   /* ---- State ---- */
   let state = {
@@ -969,6 +1035,9 @@ const ResumeBuilder = (() => {
     projCounter: 0,
     certCounter: 0,
   };
+  let isRestoringDraft = false;
+  let autosaveTimer = null;
+  let hasHydratedDraft = false;
 
   /* ---- Template definitions ---- */
   const TEMPLATES = [
@@ -985,11 +1054,126 @@ const ResumeBuilder = (() => {
     '#ec4899','#0ea5e9','#d97706','#334155','#7c3aed','#0f766e',
   ];
 
+  function setAutosaveStatus(text, cls) {
+    const el = document.getElementById('builder-autosave-status');
+    if (!el) return;
+    el.textContent = text;
+    el.classList.remove('saving', 'saved');
+    if (cls) el.classList.add(cls);
+  }
+
+  function saveDraft(data) {
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+      setAutosaveStatus('Saved', 'saved');
+    } catch (e) {
+      setAutosaveStatus('Save failed', '');
+    }
+  }
+
+  function scheduleAutosave() {
+    if (isRestoringDraft) return;
+    setAutosaveStatus('Saving...', 'saving');
+    clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(() => {
+      const draft = {
+        state: {
+          template: state.template,
+          accent: state.accent,
+          zoom: state.zoom,
+        },
+        data: getData(),
+      };
+      saveDraft(draft);
+    }, SAVE_DELAY);
+  }
+
+  function restoreDraft() {
+    let draft;
+    try {
+      draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+    } catch (e) {
+      draft = null;
+    }
+    if (!draft || !draft.data) {
+      setAutosaveStatus('Saved', 'saved');
+      return;
+    }
+
+    isRestoringDraft = true;
+    const d = draft.data;
+    const savedState = draft.state || {};
+
+    if (savedState.template) state.template = savedState.template;
+    if (savedState.accent) state.accent = savedState.accent;
+    if (savedState.zoom) state.zoom = savedState.zoom;
+
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && typeof val === 'string') el.value = val;
+    };
+
+    setVal('r-name', d.name || '');
+    setVal('r-title', d.title || '');
+    setVal('r-email', d.email || '');
+    setVal('r-phone', d.phone || '');
+    setVal('r-location', d.location || '');
+    setVal('r-linkedin', d.linkedin || '');
+    setVal('r-website', d.website || '');
+    setVal('r-summary', d.summary || '');
+    setVal('r-skills', Array.isArray(d.skills) ? d.skills.join(', ') : '');
+    setVal('r-languages', Array.isArray(d.languages) ? d.languages.join(', ') : '');
+
+    (d.experience || []).forEach(item => {
+      addExperience();
+      const id = state.expCounter;
+      setVal(`exp-role-${id}`, item.role || '');
+      setVal(`exp-company-${id}`, item.company || '');
+      setVal(`exp-start-${id}`, item.start || '');
+      setVal(`exp-end-${id}`, item.end || '');
+      setVal(`exp-loc-${id}`, item.loc || '');
+      setVal(`exp-desc-${id}`, item.desc || '');
+    });
+    (d.education || []).forEach(item => {
+      addEducation();
+      const id = state.eduCounter;
+      setVal(`edu-degree-${id}`, item.degree || '');
+      setVal(`edu-school-${id}`, item.school || '');
+      setVal(`edu-year-${id}`, item.year || '');
+      setVal(`edu-gpa-${id}`, item.gpa || '');
+    });
+    (d.projects || []).forEach(item => {
+      addProject();
+      const id = state.projCounter;
+      setVal(`proj-name-${id}`, item.name || '');
+      setVal(`proj-tech-${id}`, item.tech || '');
+      setVal(`proj-link-${id}`, item.link || '');
+      setVal(`proj-desc-${id}`, item.desc || '');
+    });
+    (d.certs || []).forEach(item => {
+      addCert();
+      const id = state.certCounter;
+      setVal(`cert-name-${id}`, item.name || '');
+      setVal(`cert-issuer-${id}`, item.issuer || '');
+    });
+
+    isRestoringDraft = false;
+    renderTemplatePicker();
+    renderColorSwatches();
+    applyZoom();
+    update();
+    setAutosaveStatus('Saved', 'saved');
+  }
+
   /* ---- Init ---- */
   function init() {
     renderTemplatePicker();
     renderColorSwatches();
     applyZoom();
+    if (!hasHydratedDraft) {
+      restoreDraft();
+      hasHydratedDraft = true;
+    }
   }
 
   function renderTemplatePicker() {
@@ -1501,6 +1685,7 @@ const ResumeBuilder = (() => {
     const renderer = map[state.template] || map.classic;
     const preview = document.getElementById('resume-preview');
     if (preview) preview.innerHTML = renderer();
+    scheduleAutosave();
   }
 
   /* ---- Zoom ---- */
@@ -1566,7 +1751,10 @@ ${Array.from(document.styleSheets).map(ss => { try { return Array.from(ss.cssRul
 const _origAppInit = App.init;
 App.startBuilder = function() {
   App.showPage('builder');
-  setTimeout(() => ResumeBuilder.init(), 50);
+  setTimeout(() => {
+    ResumeBuilder.init();
+    App.enhanceKeyboardAccess();
+  }, 50);
 };
 /* ============================================================
    COVER LETTER MODULE
