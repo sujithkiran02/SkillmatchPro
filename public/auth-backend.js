@@ -60,7 +60,7 @@ try {
   setCurrentUser({ email: data.user.email, name: data.user.name });
   Auth.updateNav();
   UI.toast('Welcome back, ' + data.user.name.split(' ')[0] + '! 👋', 'success');
-  App.startAnalyze();
+  App.goHome();
 
 } catch (err) {
   msgEl.textContent = 'Server error. Please try again.';
