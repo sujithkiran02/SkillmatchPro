@@ -3,9 +3,11 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
+const dns = require("dns");
 const path = require("path");
 
 dotenv.config();
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 const app = express();
 app.use(cors());
@@ -14,10 +16,23 @@ app.use(express.json());
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Connect MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected ✅"))
-  .catch(err => console.log(err));
+// Connect MongoDB with retry
+async function connectDB() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000 });
+    console.log("MongoDB Connected ✅");
+  } catch (err) {
+    console.error("❌ MongoDB connection failed:", err.message);
+    console.error("👉 Fix: Go to MongoDB Atlas → Network Access → Add your IP");
+    console.log("⏳ Retrying in 5 seconds...");
+    setTimeout(connectDB, 5000);
+  }
+}
+connectDB();
+
+function isDbReady() {
+  return mongoose.connection.readyState === 1;
+}
 
 // User Schema (Synced with api/ functions)
 const userSchema = new mongoose.Schema({
@@ -36,6 +51,10 @@ app.post("/api/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
+    if (!isDbReady()) {
+      return res.status(503).json({ error: "Database not connected yet. Please try again in a few seconds." });
+    }
+
     if (!name || !email || !password)
       return res.status(400).json({ error: 'Please fill in all fields.' });
     if (password.length < 6)
@@ -65,8 +84,8 @@ app.post("/api/signup", async (req, res) => {
     });
 
   } catch (err) {
-    console.error('[SIGNUP ERROR]', err.message);
-    res.status(500).json({ error: "Server error. Please try again." });
+    console.error('[SIGNUP ERROR]', err);
+    res.status(500).json({ error: err.message || "Server error. Please try again." });
   }
 });
 
@@ -75,6 +94,10 @@ app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    if (!isDbReady()) {
+      return res.status(503).json({ error: "Database not connected yet. Please try again in a few seconds." });
+    }
+
     if (!email || !password)
       return res.status(400).json({ error: 'Please fill in all fields.' });
 
@@ -95,8 +118,8 @@ app.post("/api/login", async (req, res) => {
     });
 
   } catch (err) {
-    console.error('[LOGIN ERROR]', err.message);
-    res.status(500).json({ error: "Server error. Please try again." });
+    console.error('[LOGIN ERROR]', err);
+    res.status(500).json({ error: err.message || "Server error. Please try again." });
   }
 });
 

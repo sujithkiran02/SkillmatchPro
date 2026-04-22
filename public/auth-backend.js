@@ -4,9 +4,14 @@ Now uses http://localhost:3000 instead of /api
 ============================================================ */
 (function () {
 
-const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '3000' || window.location.protocol === 'file:'
-  ? 'http://localhost:3000/api'
-  : '/api';
+if (window.location.protocol === 'file:') {
+  window.location.replace('http://localhost:3000');
+  return;
+}
+
+// Always use /api (relative) when served by Express on port 3000.
+// Only use absolute URL when opened directly as a file (file:// protocol).
+const API_BASE = '/api';
 
 const SESSION_KEY = 'smp_session';
 function setCurrentUser(user) {
