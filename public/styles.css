@@ -110,6 +110,15 @@ nav {
 .logo-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: -.2px; }
 .logo-name span { color: var(--teal-dark); }
 .nav-right { display: flex; align-items: center; gap: 24px; }
+.nav-menu-btn {
+  display: none;
+  width: 38px; height: 38px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 10px; cursor: pointer;
+  align-items: center; justify-content: center;
+  color: var(--muted); transition: all var(--transition);
+}
+.nav-menu-btn:hover { color: var(--text); border-color: var(--muted); }
 .nav-link { font-size: 14px; font-weight: 500; color: var(--muted); cursor: pointer; transition: color var(--transition); padding: 4px 2px; border-bottom: 2px solid transparent; }
 .nav-link:hover { color: var(--text); border-color: var(--teal); }
 #nav-user { font-size: 13px; font-weight: 600; color: var(--teal-dark); display: none; align-items: center; gap: 8px; }
@@ -707,12 +716,15 @@ input[type=file] { display: none; }
 .course-card {
   background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius);
   padding: 18px; cursor: pointer; transition: all var(--transition);
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 .course-card:hover { border-color: var(--teal); box-shadow: 0 4px 20px var(--teal-glow); transform: translateY(-2px); }
+.course-card:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 .course-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
 .course-name { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; margin-right: 6px; }
-.course-name a { color: inherit; }
-.course-name a:hover { color: var(--teal-dark); }
+.course-card:hover .course-name { color: var(--teal-dark); }
 .course-ext svg { color: var(--muted); }
 .course-platform { font-size: 11.5px; color: var(--muted); margin-bottom: 10px; }
 
@@ -773,15 +785,56 @@ input[type=file] { display: none; }
 ============================================================ */
 @media(max-width: 900px) {
   nav { padding: 0 18px; }
-  .nav-right .nav-link { display: none; }
+  .nav-menu-btn { display: inline-flex; }
+  .nav-right {
+    position: absolute;
+    top: 64px;
+    left: 12px;
+    right: 12px;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    z-index: 400;
+  }
+  nav.nav-open .nav-right { display: flex; }
+  .nav-link {
+    display: block;
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    padding: 10px 12px;
+  }
+  .nav-link:hover { border-color: var(--border); }
+  #nav-guest, #nav-user {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px !important;
+  }
+  #nav-guest .btn-nav, #nav-guest .btn-nav-ghost, #nav-user .btn-nav-ghost {
+    min-height: 38px;
+  }
+  #nav-user #nav-username { max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .theme-toggle { align-self: flex-end; }
   .stats-card { grid-template-columns: repeat(2,1fr); margin: 0 16px; top: -20px; }
   .stat-col:nth-child(2){ border-right:none; }
   .stat-col { border-bottom: 1px solid var(--border); }
   .stat-col:nth-child(3),.stat-col:nth-child(4){ border-bottom:none; }
   .how-grid { grid-template-columns: 1fr; max-width: 480px; }
   .roles-grid { grid-template-columns: repeat(2,1fr); }
-  .results-top { grid-template-columns: 1fr; }
-  .courses-grid { grid-template-columns: 1fr 1fr; }
+  .results-header { margin-bottom: 20px; }
+  .results-header h2 { font-size: 23px; }
+  .ai-insight-banner { padding: 14px 16px; margin-bottom: 20px; }
+  .results-top { grid-template-columns: 1fr; gap: 12px; }
+  .score-ring-card, .skills-card { padding: 20px; }
+  .courses-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .course-card { padding: 16px; }
   .a-card { padding: 24px 20px; }
   .auth-card { margin: 0 16px; padding: 32px 24px; }
   .cta-box { padding: 48px 28px; }
@@ -792,6 +845,30 @@ input[type=file] { display: none; }
   .courses-grid { grid-template-columns: 1fr; }
   .hero-btns { flex-direction: column; align-items: center; }
   .stats-card { grid-template-columns: 1fr 1fr; }
+  .a-card { padding: 20px 14px; border-radius: 14px; }
+  .results-header { margin-bottom: 16px; }
+  .results-header h2 { font-size: 20px; line-height: 1.2; }
+  .results-header p { font-size: 13px; }
+  .ai-insight-banner { gap: 10px; padding: 12px 13px; margin-bottom: 16px; }
+  .ai-insight-banner .ai-icon { width: 28px; height: 28px; border-radius: 7px; }
+  .ai-insight-text { font-size: 12.5px; line-height: 1.55; }
+  .results-top { gap: 10px; margin-bottom: 16px; }
+  .score-ring-card, .skills-card { padding: 16px 14px; border-radius: 14px; }
+  .ring-wrap { margin-bottom: 10px; }
+  .ring-wrap svg { width: 100px; height: 100px; }
+  #res-pct { font-size: 22px; }
+  .sk-header { margin-bottom: 10px; }
+  .sk-count { font-size: 28px; margin-bottom: 10px; }
+  .courses-header { margin: 16px 0 12px; }
+  .courses-header h3 { font-size: 18px; }
+  .course-card { padding: 14px; border-radius: 12px; }
+  .course-name { font-size: 12.5px; }
+  .course-platform { font-size: 11px; margin-bottom: 8px; }
+  .tag { font-size: 11px; padding: 4px 10px; }
+  .pro-tip { padding: 14px 12px; gap: 10px; margin-bottom: 16px; }
+  .tip-icon { width: 32px; height: 32px; border-radius: 9px; }
+  .tip-title { font-size: 13px; }
+  .tip-text { font-size: 12px; line-height: 1.55; }
 }
 
 /* ============================================================

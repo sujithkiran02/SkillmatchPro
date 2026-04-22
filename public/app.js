@@ -5,89 +5,89 @@ const ROLE_SKILLS = {
   'Web Developer': {
     skills: ['html','css','javascript','typescript','react','vue','angular','nodejs','php','mysql','postgresql','git','rest api','responsive design','bootstrap','tailwind','webpack','graphql','redux','jest'],
     courses: [
-      {n:'React – The Complete Guide',p:'Udemy',s:'react',u:'https://udemy.com'},
-      {n:'Node.js Developer Course',p:'Udemy',s:'nodejs',u:'https://udemy.com'},
-      {n:'Responsive Web Design',p:'freeCodeCamp',s:'responsive design',u:'https://freecodecamp.org'},
-      {n:'MySQL Bootcamp',p:'Udemy',s:'mysql',u:'https://udemy.com'},
-      {n:'Git Complete',p:'Udemy',s:'git',u:'https://udemy.com'},
-      {n:'TypeScript Deep Dive',p:'Udemy',s:'typescript',u:'https://udemy.com'},
+      {n:'React – The Complete Guide',p:'Udemy',s:'react',u:'https://www.udemy.com/course/react-the-complete-guide-incl-redux/'},
+      {n:'Node.js Developer Course',p:'Udemy',s:'nodejs',u:'https://www.udemy.com/topic/node-js/'},
+      {n:'Responsive Web Design',p:'freeCodeCamp',s:'responsive design',u:'https://www.freecodecamp.org/learn/2022/responsive-web-design/'},
+      {n:'MySQL Bootcamp',p:'Udemy',s:'mysql',u:'https://www.udemy.com/topic/mysql/'},
+      {n:'Git Complete',p:'Udemy',s:'git',u:'https://www.udemy.com/topic/git/'},
+      {n:'TypeScript Deep Dive',p:'Udemy',s:'typescript',u:'https://www.udemy.com/topic/typescript/'},
     ]
   },
   'Data Scientist': {
     skills: ['python','r','sql','statistics','machine learning','deep learning','pandas','numpy','tensorflow','pytorch','scikit-learn','data visualization','tableau','spark','hadoop','nlp','a/b testing','statistics','probability'],
     courses: [
-      {n:'Machine Learning A-Z',p:'Udemy',s:'machine learning',u:'https://udemy.com'},
-      {n:'Python for Data Science',p:'Coursera',s:'python',u:'https://coursera.org'},
-      {n:'TensorFlow Developer',p:'Coursera',s:'tensorflow',u:'https://coursera.org'},
-      {n:'SQL for Data Analysis',p:'Udemy',s:'sql',u:'https://udemy.com'},
-      {n:'Tableau for Beginners',p:'Udemy',s:'tableau',u:'https://udemy.com'},
-      {n:'Statistics for Data Science',p:'edX',s:'statistics',u:'https://edx.org'},
+      {n:'Machine Learning A-Z',p:'Udemy',s:'machine learning',u:'https://www.udemy.com/course/machinelearning/'},
+      {n:'Python for Data Science',p:'Coursera',s:'python',u:'https://www.coursera.org/specializations/jhu-data-science'},
+      {n:'TensorFlow Developer',p:'Coursera',s:'tensorflow',u:'https://www.coursera.org/professional-certificates/tensorflow-in-practice'},
+      {n:'SQL for Data Analysis',p:'Udemy',s:'sql',u:'https://www.udemy.com/topic/sql/'},
+      {n:'Tableau for Beginners',p:'Udemy',s:'tableau',u:'https://www.udemy.com/topic/tableau/'},
+      {n:'Statistics for Data Science',p:'edX',s:'statistics',u:'https://www.edx.org/learn/statistics'},
     ]
   },
   'Mobile Developer': {
     skills: ['react native','flutter','swift','kotlin','java','ios','android','firebase','redux','expo','xcode','dart','mobile ui','rest api','sqlite','push notifications','app store deployment'],
     courses: [
-      {n:'React Native – Practical Guide',p:'Udemy',s:'react native',u:'https://udemy.com'},
-      {n:'Flutter & Dart Complete Guide',p:'Udemy',s:'flutter',u:'https://udemy.com'},
-      {n:'iOS Dev with Swift',p:'Apple Dev',s:'swift',u:'https://developer.apple.com'},
-      {n:'Android in Kotlin',p:'Udemy',s:'kotlin',u:'https://udemy.com'},
-      {n:'Firebase for Mobile',p:'Firebase',s:'firebase',u:'https://firebase.google.com'},
-      {n:'Redux Toolkit Mastery',p:'Udemy',s:'redux',u:'https://udemy.com'},
+      {n:'React Native – Practical Guide',p:'Udemy',s:'react native',u:'https://www.udemy.com/course/react-native-the-practical-guide/'},
+      {n:'Flutter & Dart Complete Guide',p:'Udemy',s:'flutter',u:'https://www.udemy.com/course/learn-flutter-dart-to-build-ios-android-apps/'},
+      {n:'iOS Dev with Swift',p:'Apple Dev',s:'swift',u:'https://developer.apple.com/tutorials/app-dev-training'},
+      {n:'Android in Kotlin',p:'Udemy',s:'kotlin',u:'https://www.udemy.com/topic/kotlin/'},
+      {n:'Firebase for Mobile',p:'Firebase',s:'firebase',u:'https://firebase.google.com/docs/android/setup'},
+      {n:'Redux Toolkit Mastery',p:'Udemy',s:'redux',u:'https://www.udemy.com/topic/redux/'},
     ]
   },
   'DevOps Engineer': {
     skills: ['linux','bash','docker','kubernetes','jenkins','aws','azure','gcp','terraform','ansible','ci/cd','prometheus','grafana','helm','nginx','git','monitoring','networking','security'],
     courses: [
-      {n:'Docker & Kubernetes',p:'Udemy',s:'docker',u:'https://udemy.com'},
-      {n:'AWS Certified Solutions Architect',p:'AWS',s:'aws',u:'https://aws.amazon.com'},
-      {n:'Terraform Zero to Hero',p:'Udemy',s:'terraform',u:'https://udemy.com'},
-      {n:'Jenkins Complete Guide',p:'Udemy',s:'jenkins',u:'https://udemy.com'},
-      {n:'Kubernetes for Beginners',p:'KodeKloud',s:'kubernetes',u:'https://kodekloud.com'},
-      {n:'Ansible Automation',p:'RedHat',s:'ansible',u:'https://redhat.com'},
+      {n:'Docker & Kubernetes',p:'Udemy',s:'docker',u:'https://www.udemy.com/course/docker-kubernetes-the-practical-guide/'},
+      {n:'AWS Certified Solutions Architect',p:'AWS',s:'aws',u:'https://aws.amazon.com/certification/certified-solutions-architect-associate/'},
+      {n:'Terraform Zero to Hero',p:'Udemy',s:'terraform',u:'https://www.udemy.com/topic/terraform/'},
+      {n:'Jenkins Complete Guide',p:'Udemy',s:'jenkins',u:'https://www.udemy.com/topic/jenkins/'},
+      {n:'Kubernetes for Beginners',p:'KodeKloud',s:'kubernetes',u:'https://kodekloud.com/courses/kubernetes-for-the-absolute-beginners-hands-on/'},
+      {n:'Ansible Automation',p:'RedHat',s:'ansible',u:'https://www.redhat.com/en/technologies/management/ansible/training'},
     ]
   },
   'UI/UX Designer': {
     skills: ['figma','sketch','adobe xd','user research','wireframing','prototyping','usability testing','design systems','accessibility','information architecture','motion design','css','html','typography','color theory','interaction design'],
     courses: [
-      {n:'Google UX Design Certificate',p:'Coursera',s:'user research',u:'https://coursera.org'},
-      {n:'Figma UI Design',p:'Udemy',s:'figma',u:'https://udemy.com'},
-      {n:'UX Research Methods',p:'Nielsen Norman',s:'usability testing',u:'https://nngroup.com'},
-      {n:'Design Systems Mastery',p:'Udemy',s:'design systems',u:'https://udemy.com'},
-      {n:'Web Accessibility (WCAG)',p:'W3C',s:'accessibility',u:'https://w3.org'},
-      {n:'Motion Design Principles',p:'Skillshare',s:'motion design',u:'https://skillshare.com'},
+      {n:'Google UX Design Certificate',p:'Coursera',s:'user research',u:'https://www.coursera.org/professional-certificates/google-ux-design'},
+      {n:'Figma UI Design',p:'Udemy',s:'figma',u:'https://www.udemy.com/topic/figma/'},
+      {n:'UX Research Methods',p:'Nielsen Norman',s:'usability testing',u:'https://www.nngroup.com/courses/ux-research/'},
+      {n:'Design Systems Mastery',p:'Udemy',s:'design systems',u:'https://www.udemy.com/topic/design-system/'},
+      {n:'Web Accessibility (WCAG)',p:'W3C',s:'accessibility',u:'https://www.w3.org/WAI/courses/foundations-course/'},
+      {n:'Motion Design Principles',p:'Skillshare',s:'motion design',u:'https://www.skillshare.com/en/browse/motion-design'},
     ]
   },
   'Backend Developer': {
     skills: ['python','java','nodejs','php','ruby','golang','rest api','graphql','microservices','redis','postgresql','mongodb','sql','message queues','docker','aws','authentication','caching','testing','ci/cd'],
     courses: [
-      {n:'Node.js Complete Guide',p:'Udemy',s:'nodejs',u:'https://udemy.com'},
-      {n:'Python Backend Development',p:'Udemy',s:'python',u:'https://udemy.com'},
-      {n:'GraphQL with Node',p:'Udemy',s:'graphql',u:'https://udemy.com'},
-      {n:'PostgreSQL Mastery',p:'Udemy',s:'postgresql',u:'https://udemy.com'},
-      {n:'Microservices with Docker',p:'Udemy',s:'microservices',u:'https://udemy.com'},
-      {n:'Redis in Action',p:'Redis University',s:'redis',u:'https://university.redis.com'},
+      {n:'Node.js Complete Guide',p:'Udemy',s:'nodejs',u:'https://www.udemy.com/topic/node-js/'},
+      {n:'Python Backend Development',p:'Udemy',s:'python',u:'https://www.udemy.com/topic/python/'},
+      {n:'GraphQL with Node',p:'Udemy',s:'graphql',u:'https://www.udemy.com/topic/graphql/'},
+      {n:'PostgreSQL Mastery',p:'Udemy',s:'postgresql',u:'https://www.udemy.com/topic/postgresql/'},
+      {n:'Microservices with Docker',p:'Udemy',s:'microservices',u:'https://www.udemy.com/topic/microservices/'},
+      {n:'Redis in Action',p:'Redis University',s:'redis',u:'https://university.redis.com/'},
     ]
   },
   'Cybersecurity Analyst': {
     skills: ['networking','ethical hacking','penetration testing','siem','forensics','firewalls','cryptography','compliance','vulnerability assessment','incident response','threat intelligence','linux','python','wireshark','nmap','ids/ips','cloud security'],
     courses: [
-      {n:'Ethical Hacking Complete',p:'Udemy',s:'ethical hacking',u:'https://udemy.com'},
-      {n:'CompTIA Security+',p:'CompTIA',s:'compliance',u:'https://comptia.org'},
-      {n:'Penetration Testing',p:'Cybrary',s:'penetration testing',u:'https://cybrary.it'},
-      {n:'SIEM with Splunk',p:'Splunk',s:'siem',u:'https://splunk.com'},
-      {n:'Digital Forensics',p:'SANS',s:'forensics',u:'https://sans.org'},
-      {n:'Threat Intelligence',p:'Cybrary',s:'threat intelligence',u:'https://cybrary.it'},
+      {n:'Ethical Hacking Complete',p:'Udemy',s:'ethical hacking',u:'https://www.udemy.com/topic/ethical-hacking/'},
+      {n:'CompTIA Security+',p:'CompTIA',s:'compliance',u:'https://www.comptia.org/certifications/security'},
+      {n:'Penetration Testing',p:'Cybrary',s:'penetration testing',u:'https://www.cybrary.it/catalog/career-path/penetration-tester/'},
+      {n:'SIEM with Splunk',p:'Splunk',s:'siem',u:'https://www.splunk.com/en_us/training/free-courses/splunk-fundamentals-1.html'},
+      {n:'Digital Forensics',p:'SANS',s:'forensics',u:'https://www.sans.org/cyber-security-courses/digital-forensics-essentials/'},
+      {n:'Threat Intelligence',p:'Cybrary',s:'threat intelligence',u:'https://www.cybrary.it/course/introduction-to-threat-intelligence/'},
     ]
   },
   'AI/ML Engineer': {
     skills: ['python','mathematics','deep learning','tensorflow','pytorch','nlp','computer vision','mlops','transformers','reinforcement learning','scikit-learn','statistics','data engineering','cloud computing','model deployment','feature engineering'],
     courses: [
-      {n:'Deep Learning Specialization',p:'Coursera',s:'deep learning',u:'https://coursera.org'},
-      {n:'PyTorch for Deep Learning',p:'Udemy',s:'pytorch',u:'https://udemy.com'},
-      {n:'NLP with Transformers',p:'Hugging Face',s:'nlp',u:'https://huggingface.co'},
-      {n:'Computer Vision with OpenCV',p:'Udemy',s:'computer vision',u:'https://udemy.com'},
-      {n:'MLOps Fundamentals',p:'Google Cloud',s:'mlops',u:'https://cloud.google.com'},
-      {n:'Reinforcement Learning',p:'DeepMind',s:'reinforcement learning',u:'https://deepmind.com'},
+      {n:'Deep Learning Specialization',p:'Coursera',s:'deep learning',u:'https://www.coursera.org/specializations/deep-learning'},
+      {n:'PyTorch for Deep Learning',p:'Udemy',s:'pytorch',u:'https://www.udemy.com/topic/pytorch/'},
+      {n:'NLP with Transformers',p:'Hugging Face',s:'nlp',u:'https://huggingface.co/learn'},
+      {n:'Computer Vision with OpenCV',p:'Udemy',s:'computer vision',u:'https://www.udemy.com/topic/opencv/'},
+      {n:'MLOps Fundamentals',p:'Google Cloud',s:'mlops',u:'https://www.cloudskillsboost.google/paths/17'},
+      {n:'Reinforcement Learning',p:'DeepMind',s:'reinforcement learning',u:'https://www.deepmind.com/learning-resources/introduction-to-reinforcement-learning-with-david-silver'},
     ]
   }
 };
@@ -760,14 +760,14 @@ const Analyzer = (() => {
 
     // Courses
     document.getElementById('res-courses').innerHTML = result.courses.map(c => `
-      <div class="course-card">
+      <a class="course-card" href="${c.u}" target="_blank" rel="noopener noreferrer">
         <div class="course-top">
-          <div class="course-name"><a href="${c.u}" target="_blank" rel="noopener">${c.n}</a></div>
+          <div class="course-name">${c.n}</div>
           <div class="course-ext"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
         </div>
         <div class="course-platform">${c.p}</div>
         <span class="tag r">${c.s}</span>
-      </div>`
+      </a>`
     ).join('');
 
     // Show results card
@@ -834,6 +834,27 @@ const Analyzer = (() => {
    APP MODULE — page routing, theme
 ============================================================ */
 const App = (() => {
+  function syncMobileNavButton() {
+    const nav = document.querySelector('nav');
+    const menuBtn = document.getElementById('nav-menu-btn');
+    if (!nav || !menuBtn) return;
+    menuBtn.setAttribute('aria-expanded', nav.classList.contains('nav-open') ? 'true' : 'false');
+  }
+
+  function closeMobileNav() {
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+    nav.classList.remove('nav-open');
+    syncMobileNavButton();
+  }
+
+  function toggleMobileNav() {
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+    nav.classList.toggle('nav-open');
+    syncMobileNavButton();
+  }
+
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const page = document.getElementById('page-' + id);
@@ -841,6 +862,7 @@ const App = (() => {
       page.classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+    closeMobileNav();
   }
 
   function startAnalyze() {
@@ -871,6 +893,7 @@ const App = (() => {
       document.getElementById('theme-icon-sun').style.display  = 'block';
       localStorage.setItem('smp_theme', 'dark');
     }
+    closeMobileNav();
   }
 
   function init() {
@@ -884,6 +907,31 @@ const App = (() => {
 
     // Update nav
     Auth.updateNav();
+    syncMobileNavButton();
+
+    const nav = document.querySelector('nav');
+    const navRight = document.getElementById('nav-right');
+
+    document.addEventListener('click', e => {
+      if (!nav || !nav.classList.contains('nav-open')) return;
+      if (nav.contains(e.target)) return;
+      closeMobileNav();
+    });
+
+    if (navRight) {
+      navRight.addEventListener('click', e => {
+        if (!window.matchMedia('(max-width: 900px)').matches) return;
+        if (e.target.closest('.nav-link, button')) closeMobileNav();
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 900) closeMobileNav();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeMobileNav();
+    });
 
     // Scroll reveal
     const io = new IntersectionObserver(entries => {
@@ -894,7 +942,7 @@ const App = (() => {
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
   }
 
-  return { showPage, startAnalyze, goHome, toggleTheme, init };
+  return { showPage, startAnalyze, goHome, toggleTheme, toggleMobileNav, closeMobileNav, init };
 })();
 
 /* ============================================================
