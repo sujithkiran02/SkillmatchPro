@@ -49,12 +49,12 @@ const ROLE_SKILLS = {
   'UI/UX Designer': {
     skills: ['figma','sketch','adobe xd','user research','wireframing','prototyping','usability testing','design systems','accessibility','information architecture','motion design','css','html','typography','color theory','interaction design'],
     courses: [
-      {n:'Google UX Design Certificate',p:'Coursera',s:'user research',u:'https://coursera.org'},
-      {n:'Figma UI Design',p:'Udemy',s:'figma',u:'https://udemy.com'},
-      {n:'UX Research Methods',p:'Nielsen Norman',s:'usability testing',u:'https://nngroup.com'},
-      {n:'Design Systems Mastery',p:'Udemy',s:'design systems',u:'https://udemy.com'},
-      {n:'Web Accessibility (WCAG)',p:'W3C',s:'accessibility',u:'https://w3.org'},
-      {n:'Motion Design Principles',p:'Skillshare',s:'motion design',u:'https://skillshare.com'},
+      {n:'Google UX Design Certificate',p:'Coursera',s:'user research',u:'https://www.coursera.org/professional-certificates/google-ux-design'},
+      {n:'Figma UI Design',p:'Udemy',s:'figma',u:'https://www.udemy.com/topic/figma/'},
+      {n:'UX Research Methods',p:'Nielsen Norman',s:'usability testing',u:'https://www.nngroup.com/courses/ux-research/'},
+      {n:'Design Systems Mastery',p:'Udemy',s:'design systems',u:'https://www.udemy.com/topic/design-system/'},
+      {n:'Web Accessibility (WCAG)',p:'W3C',s:'accessibility',u:'https://www.w3.org/WAI/courses/foundations-course/'},
+      {n:'Motion Design Principles',p:'Skillshare',s:'motion design',u:'https://www.skillshare.com/en/browse/motion-design'},
     ]
   },
   'Backend Developer': {
@@ -760,14 +760,14 @@ const Analyzer = (() => {
 
     // Courses
     document.getElementById('res-courses').innerHTML = result.courses.map(c => `
-      <div class="course-card">
+      <a class="course-card" href="${c.u}" target="_blank" rel="noopener">
         <div class="course-top">
-          <div class="course-name"><a href="${c.u}" target="_blank" rel="noopener">${c.n}</a></div>
+          <div class="course-name">${c.n}</div>
           <div class="course-ext"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
         </div>
         <div class="course-platform">${c.p}</div>
         <span class="tag r">${c.s}</span>
-      </div>`
+      </a>`
     ).join('');
 
     // Show results card
