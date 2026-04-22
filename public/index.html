@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+<canvas id="global-bg-canvas" class="global-bg-canvas"></canvas>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 
 <div class="toast-container" id="toast-container"></div>
@@ -80,10 +81,10 @@
 
 <!-- HOME -->
 <div id="page-home" class="page active">
-  <section class="hero">
+  <section class="hero" id="hero-section">
     <div class="hero-orb o1"></div><div class="hero-orb o2"></div>
     <div class="hero-badge"><span class="badge-dot"></span>AI-Powered Resume Intelligence</div>
-    <h1>Discover Your<br><span class="teal">Skill Gaps</span><br><span class="outline">Instantly</span></h1>
+    <h1>Discover Your<br><span class="primary-text">Skill Gaps</span><br><span class="outline">Instantly</span></h1>
     <p>Analyze your resume against top roles, build stunning resumes from professional templates, and get AI-powered career guidance.</p>
     <div class="hero-btns">
       <button class="btn-primary" onclick="App.startAnalyze()">Analyze My Resume <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
@@ -104,7 +105,7 @@
 
   <section class="section section-center" id="sec-how">
     <div class="section-badge-wrap"><div class="section-badge">Simple Process</div></div>
-    <h2 class="section-title">How It <span class="teal">Works</span></h2>
+    <h2 class="section-title">How It <span class="primary-text">Works</span></h2>
     <p class="section-sub">Four simple steps to understand your skill landscape and land your dream role.</p>
     <div class="how-grid how-grid-4">
       <div class="how-card reveal reveal-delay-1"><div class="how-card-step">Step 01</div><div class="how-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div><h3>Upload Resume</h3><p>Drop your PDF and our AI extracts text and identifies skills instantly.</p></div>
@@ -136,7 +137,7 @@
 <!-- ANALYZE PAGE -->
 <div id="page-analyze" class="page">
   <div class="analyze-hero">
-    <h2>Analyze Your <span class="teal">Resume</span></h2>
+    <h2>Analyze Your <span class="primary-text">Resume</span></h2>
     <p>Real AI-powered analysis based on your actual resume content</p>
     <div class="stepper">
       <div class="step" id="si-1"><div class="step-circle">1</div><span>Upload</span></div>
@@ -508,5 +509,6 @@
 
 <script src="app.js"></script>
 <script src="auth-backend.js"></script>
+<script src="bg-animation.js"></script>
 </body>
 </html>
