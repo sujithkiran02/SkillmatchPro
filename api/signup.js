@@ -12,9 +12,25 @@ dns.setServers(['8.8.8.8', '1.1.1.1']);
 let isConnected = false;
 
 async function connectDB() {
-  if (isConnected) return;
-  await mongoose.connect(process.env.MONGO_URI);
-  isConnected = true;
+  if (isConnected && mongoose.connection.readyState === 1) return;
+  const uris = [
+    process.env.MONGO_URI,
+    process.env.LOCAL_MONGO_URI,
+    'mongodb://127.0.0.1:27017/skillmatchpro',
+    'mongodb://localhost:27017/skillmatchpro'
+  ].filter(Boolean);
+
+  let lastErr = null;
+  for (const uri of uris) {
+    try {
+      await mongoose.connect(uri, { serverSelectionTimeoutMS: 3000 });
+      isConnected = true;
+      return;
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr || new Error('Database connection failed');
 }
 
 /* ── User Schema ─────────────────────────────────────────── */

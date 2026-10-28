@@ -16,17 +16,30 @@ app.use(express.json());
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Connect MongoDB with retry
+// Connect MongoDB with multi-target fallback (Atlas -> Local)
 async function connectDB() {
-  try {
-    await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000 });
-    console.log("MongoDB Connected ✅");
-  } catch (err) {
-    console.error("❌ MongoDB connection failed:", err.message);
-    console.error("👉 Fix: Go to MongoDB Atlas → Network Access → Add your IP");
-    console.log("⏳ Retrying in 5 seconds...");
-    setTimeout(connectDB, 5000);
+  const uris = [
+    process.env.MONGO_URI,
+    process.env.LOCAL_MONGO_URI,
+    "mongodb://127.0.0.1:27017/skillmatchpro",
+    "mongodb://localhost:27017/skillmatchpro"
+  ].filter(Boolean);
+
+  for (const uri of uris) {
+    try {
+      const sanitized = uri.replace(/:[^:@]+@/, ":****@");
+      console.log(`Connecting to MongoDB (${sanitized})...`);
+      await mongoose.connect(uri, { serverSelectionTimeoutMS: 3000 });
+      console.log(`MongoDB Connected ✅ (${sanitized})`);
+      return;
+    } catch (err) {
+      console.warn(`Connection to ${uri.replace(/:[^:@]+@/, ":****@")} failed: ${err.message}`);
+    }
   }
+
+  console.error("❌ All MongoDB connections failed.");
+  console.log("⏳ Retrying in 5 seconds...");
+  setTimeout(connectDB, 5000);
 }
 connectDB();
 
